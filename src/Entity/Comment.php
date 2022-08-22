@@ -43,6 +43,9 @@ use Symfony\Component\Validator\Constraints as Assert;
             'normalization_context' => [
                 'groups' => ['read:comment', 'read:full:comment']
             ]
+        ],
+        'PUT' => [
+            'security' => "is_granted('COMMENT_EDIT', object)"
         ]
     ],
     normalizationContext: ['groups' => ['read:comment']],
