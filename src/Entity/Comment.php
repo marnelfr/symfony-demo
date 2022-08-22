@@ -11,7 +11,9 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use function Symfony\Component\String\u;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -27,27 +29,37 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'symfony_demo_comment')]
+#[ApiResource(
+    collectionOperations: ['GET'],
+    itemOperations: ['GET'],
+    normalizationContext: ['groups' => ['read:comments']]
+)]
 class Comment
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['read:comments'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: Post::class, inversedBy: 'comments')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['read:comments'])]
     private ?Post $post = null;
 
     #[ORM\Column(type: 'text')]
     #[Assert\NotBlank(message: 'comment.blank')]
     #[Assert\Length(min: 5, minMessage: 'comment.too_short', max: 10000, maxMessage: 'comment.too_long')]
+    #[Groups(['read:comments'])]
     private ?string $content = null;
 
     #[ORM\Column(type: 'datetime')]
+    #[Groups(['read:comments'])]
     private \DateTime $publishedAt;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['read:comments'])]
     private ?User $author = null;
 
     public function __construct()
