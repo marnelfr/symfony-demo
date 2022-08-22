@@ -11,7 +11,9 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use function Symfony\Component\String\u;
@@ -30,37 +32,48 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity]
 #[ORM\Table(name: 'symfony_demo_comment')]
 #[ApiResource(
-    collectionOperations: ['GET'],
-    itemOperations: ['GET'],
-    normalizationContext: ['groups' => ['read:comments']],
-    order: ['publishedAt' => 'DESC']
+    collectionOperations: ['GET', 'POST'],
+    itemOperations: [
+        'GET' => [
+            'normalization_context' => [
+                'groups' => ['read:comment', 'read:full:comment']
+            ]
+        ]
+    ],
+    normalizationContext: ['groups' => ['read:comment']],
+    order: ['publishedAt' => 'DESC'],
+    paginationItemsPerPage: 2
+)]
+#[ApiFilter(
+    SearchFilter::class,
+    properties: ['post' => 'exact']
 )]
 class Comment
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['read:comments'])]
+    #[Groups(['read:comment'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: Post::class, inversedBy: 'comments')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['read:comments'])]
+    #[Groups(['read:full:comment'])]
     private ?Post $post = null;
 
     #[ORM\Column(type: 'text')]
     #[Assert\NotBlank(message: 'comment.blank')]
     #[Assert\Length(min: 5, minMessage: 'comment.too_short', max: 10000, maxMessage: 'comment.too_long')]
-    #[Groups(['read:comments'])]
+    #[Groups(['read:comment'])]
     private ?string $content = null;
 
     #[ORM\Column(type: 'datetime')]
-    #[Groups(['read:comments'])]
+    #[Groups(['read:comment'])]
     private \DateTime $publishedAt;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['read:comments'])]
+    #[Groups(['read:comment'])]
     private ?User $author = null;
 
     public function __construct()
