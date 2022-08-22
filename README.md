@@ -47,7 +47,7 @@ argument and should return it after filling it.\
 Dependency injections are done via the constructor.
 
 ## Edit a resource
-It's made by the ``itemOperation`` ``PUT`` or ``DELETE`` method.\
+It's made by the ``itemOperation`` ``PUT`` or ``DELETE`` method.
 ````php 
 itemOperations: [
     'PUT' => [
@@ -65,4 +65,4 @@ They are created thanks to the command ``make:voter``.
 A voter has 2 methods: 
 - ``supports``: returns ``true`` if the user is allowed to perform the operation
 - ``voteOnAttribute``: makes a deeper verification based on our object 
-attribute to check if the action can be proceeded.
+attributes to check if the action can be proceeded.
