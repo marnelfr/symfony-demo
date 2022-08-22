@@ -36,7 +36,10 @@ use Symfony\Component\Validator\Constraints as Assert;
         'GET',
         'POST' => [
             'security' => "is_granted('IS_AUTHENTICATED_FULLY')",
-            'controller' => \App\Controller\Api\CommentCreateController::class
+            'controller' => \App\Controller\Api\CommentCreateController::class,
+            'denormalization_context' => [
+                'groups' => ['create:comment']
+            ]
         ]
     ],
     itemOperations: [
@@ -46,7 +49,10 @@ use Symfony\Component\Validator\Constraints as Assert;
             ]
         ],
         'PUT' => [
-            'security' => "is_granted('COMMENT_EDIT', object)"
+            'security' => "is_granted('COMMENT_EDIT', object)",
+            'denormalization_context' => [
+                'groups' => ['update:comment']
+            ]
         ],
         'DELETE' => [
             'security' => "is_granted('COMMENT_EDIT', object)"
@@ -70,13 +76,13 @@ class Comment
 
     #[ORM\ManyToOne(targetEntity: Post::class, inversedBy: 'comments')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['read:full:comment'])]
+    #[Groups(['read:full:comment', 'create:comment'])]
     private ?Post $post = null;
 
     #[ORM\Column(type: 'text')]
     #[Assert\NotBlank(message: 'comment.blank')]
     #[Assert\Length(min: 5, minMessage: 'comment.too_short', max: 10000, maxMessage: 'comment.too_long')]
-    #[Groups(['read:comment'])]
+    #[Groups(['read:comment', 'create:comment', 'update:comment'])]
     private ?string $content = null;
 
     #[ORM\Column(type: 'datetime')]
