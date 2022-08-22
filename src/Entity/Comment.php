@@ -32,7 +32,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(
     collectionOperations: ['GET'],
     itemOperations: ['GET'],
-    normalizationContext: ['groups' => ['read:comments']]
+    normalizationContext: ['groups' => ['read:comments']],
+    order: ['publishedAt' => 'DESC']
 )]
 class Comment
 {
