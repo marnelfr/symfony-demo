@@ -12,6 +12,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Controller\Api\EmptyController;
 use App\Repository\PostRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -37,7 +38,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[UniqueEntity(fields: ['slug'], errorPath: 'title', message: 'post.slug_unique')]
 #[ApiResource(
     collectionOperations: [],
-    itemOperations: ['GET']
+    itemOperations: [
+        'GET' => [
+            'read' => false,
+            'deserialize' => false,
+            'controller' => EmptyController::class
+        ]
+    ]
 )]
 class Post
 {
