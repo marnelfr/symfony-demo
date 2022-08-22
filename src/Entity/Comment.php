@@ -35,6 +35,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     collectionOperations: [
         'GET',
         'POST' => [
+            'security' => "is_granted('IS_AUTHENTICATED_FULLY')",
             'controller' => \App\Controller\Api\CommentCreateController::class
         ]
     ],
@@ -45,6 +46,9 @@ use Symfony\Component\Validator\Constraints as Assert;
             ]
         ],
         'PUT' => [
+            'security' => "is_granted('COMMENT_EDIT', object)"
+        ],
+        'DELETE' => [
             'security' => "is_granted('COMMENT_EDIT', object)"
         ]
     ],
