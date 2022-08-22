@@ -32,7 +32,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity]
 #[ORM\Table(name: 'symfony_demo_comment')]
 #[ApiResource(
-    collectionOperations: ['GET', 'POST'],
+    collectionOperations: [
+        'GET',
+        'POST' => [
+            'controller' => \App\Controller\Api\CommentCreateController::class
+        ]
+    ],
     itemOperations: [
         'GET' => [
             'normalization_context' => [
